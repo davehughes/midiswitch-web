@@ -2,14 +2,12 @@ import React from 'react';
 
 import _ from 'lodash';
 
-import { Grid, FormControl, InputLabel, Select, MenuItem, Button, Card, CardActions, CardContent, TextField } from '@material-ui/core';
 import { NodeModelFactory, JunctionBlockFactory, FilterBlockFactory, ChannelBreakoutBlockFactory, InterchangeBlockFactory } from './blocks';
-import { KeySplit, TransposeConfig, ChannelMapConfig, ControlMapConfig, EventMonitor } from './config';
-import FilterStack from './FilterStack';
 
 import createEngine, { DiagramModel } from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
-import { LinkModel, NodeModel, CustomNodeFactory } from './diagrams/NodeModel';
+import { NodeModel, CustomNodeFactory } from '@components/NodeModel';
+import styled from 'styled-components';
 
 // Design and next steps: // + Allow composition of blocks to build higher-level components //   + e.g. I should be able to create the channel breakout block in this tool // + Add hamburger/menu to node to expose configuration options
 // + Nodes have a corresponding detail/config component is shown when highlighted
@@ -25,10 +23,10 @@ import { LinkModel, NodeModel, CustomNodeFactory } from './diagrams/NodeModel';
 
 
 class DiagramState {
-  engine: any = null;
+  _engine: any = null;
 
   get model() {
-    return this.state.engine.getModel()
+    return this.engine.getModel()
   }
 
   get selectedNodes() {
@@ -36,16 +34,13 @@ class DiagramState {
   }
 
   get engine() {
-    if (!this.engine) {
-      this.engine = this.initEngine();
+    if (!this._engine) {
+      this._engine = this.initEngine();
     }
-    return this.engine;
+    return this._engine;
   }
 
   initEngine() {
-    if (!process.browser) {
-      return;
-    }
     // Basic setup from React Diagrams documentation
     // (https://projectstorm.gitbook.io/react-diagrams/getting-started/using-the-library)
 
@@ -113,18 +108,13 @@ export default class DiagramCanvas extends React.Component {
 
   render() {
     const engine = this.state.diagramState.engine;
-    const widget = engine ? React.createElement(CanvasWidget, { engine, className: 'canvas' }) : <p>Engine not initialized.</p>;
-    return (
-      <div>
-        {widget}
-
-        <style global jsx>{`
-          .canvas {
-              height: 400px;
-              background-color: whitesmoke;
-          }
-        `}</style>
-      </div>
-    );
+    if (!engine) {
+      return (<p>Engine not initialized.</p>);
+    }
+    const StyledCanvasWidget = styled(CanvasWidget)`
+      height: 400px;
+      background-color: whitesmoke;
+    `;
+    return (<StyledCanvasWidget engine={engine} />);
   }
 } 

@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { AbstractReactFactory } from '@projectstorm/react-canvas-core';
-import { DiagramEngine, PortWidget } from '@projectstorm/react-diagrams-core';
-import { DefaultNodeModel, DefaultLinkModel, DefaultPortLabel, DiagramModel } from '@projectstorm/react-diagrams';
+import { DiagramEngine } from '@projectstorm/react-diagrams-core';
+import { DefaultNodeModel, DefaultLinkModel, DefaultPortLabel } from '@projectstorm/react-diagrams';
 import * as _ from 'lodash';
 import styled from '@emotion/styled';
-import { css } from '@emotion/core';
-import { IconButton, Menu, MenuItem } from '@material-ui/core';
-import { Dashboard, Menu as MenuIcon, Stop as StopIcon, AccountTreeOutlined } from '@material-ui/icons';
+import { Menu, MenuItem } from '@material-ui/core';
+import { Stop as StopIcon } from '@material-ui/icons';
 
 export class NodeModel extends DefaultNodeModel {
   constructor(options) {
@@ -22,12 +21,12 @@ export class CustomNodeFactory extends AbstractReactFactory<NodeModel, DiagramEn
 		super('test-custom-node');
 	}
 
-	generateModel(initialConfig) {
+	generateModel(initialConfig): NodeModel {
 		return new NodeModel({});
 	}
 
 	generateReactWidget(event): JSX.Element {
-		return <NodeWidget engine={this.engine as DiagramEngine} node={event.model} />;
+		return (<NodeWidget engine={this.engine} node={event.model} />);
 	}
 }
 
@@ -79,9 +78,13 @@ export interface NodeWidgetProps {
 	engine: DiagramEngine;
 }
 
-export interface NodeWidgetState {}
+export interface NodeWidgetState {
+  mouseX: number | null;
+  mouseY: number | null;
+  contextOptions: string[];
+}
 
-export class NodeWidget extends React.Component<NodeWidgetProps> {
+export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
   componentWillMount() {
     this.setState({
       mouseX: null,
@@ -121,11 +124,6 @@ export class NodeWidget extends React.Component<NodeWidgetProps> {
   }
 
 	render() {
-    const options = [
-      'Edit Contained Blocks',
-      'Foo',
-      'Bar',
-    ];
 		return (
 			<S.Node
 				selected={this.props.node.isSelected()}

@@ -24,7 +24,7 @@ export class Mididings extends EventEmitter {
   launch() {
     if (this.subprocess) {
       console.log("Process is already running, ignoring launch() command");
-      return;
+      return this.subprocess;
     }
 
     const opts = {
@@ -58,13 +58,17 @@ export class Mididings extends EventEmitter {
   }
 
   consumeLog() {
-    const tailer = new tail.Tail(this.logPath, "\n", {}, true);
-    tailer.on('line', (line) => {
+    const tailer = new tail.Tail(this.logPath, {
+      separator: '\n',
+      fromBeginning: false,
+      follow: true,
+    });
+    tailer.on('line', (line: string) => {
       const event = JSON.parse(line);
       console.log(event);
       this.emit('event', event);
     });
-    tailer.on('error', (error) => {
+    tailer.on('error', (error: any) => {
       console.log(`eventlog ERROR>${error}`);
       this.emit('error', error);
     });

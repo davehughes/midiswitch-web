@@ -1,9 +1,19 @@
 import _ from 'lodash';
-import fs from 'fs';
 import readline from 'readline';
 import child_process from 'child_process';
 
-async function parseJackPorts(stream) {
+export interface JackDevicePort {
+  device: string;
+  port: string;
+}
+
+export interface JackPortState extends JackDevicePort {
+  connections: JackDevicePort[];
+  properties?: string[];
+  type?: string;
+}
+
+async function parseJackPorts(stream): Promise<JackPortState[]> {
   const rl = readline.createInterface({
     input: stream,
     terminal: false,
@@ -18,8 +28,8 @@ async function parseJackPorts(stream) {
   // <tab>type
   const typePattern = /^\t(.*)$/;
 
-  const ports = [];
-  let currentPort = null;
+  const ports: JackPortState[] = [];
+  let currentPort: JackPortState | null = null;
   rl.on('line', (line) => {
     const mproperties = propertiesPattern.exec(line);
     if (mproperties) {
@@ -47,7 +57,10 @@ async function parseJackPorts(stream) {
         console.log('Connection matched but no current port; skipping...');
         return;
       }
-      currentPort.connections.push(mconnection[1].trim());
+      currentPort.connections.push({
+        device: mconnection[1].trim(),
+        port: mconnection[2].trim(),
+      });
       return;
     }
 

@@ -1,4 +1,5 @@
-import { LinkModel, NodeModel } from './diagrams/NodeModel';
+import _ from 'lodash';
+import { NodeModel } from '@components/NodeModel';
 
 export interface NodeModelFactory {
   key: string;
@@ -50,7 +51,7 @@ export class ChannelBreakoutBlockFactory {
     const coords = canvas.bumpLayoutCoords();
     node.setPosition(coords.x, coords.y);
     node.addInPort('in');
-    const channelOutputs = [...Array(16).keys()].map(i => {
+    _.each(_.range(16), (i) => {
       node.addOutPort(`channel ${i + 1}`);
     });
     return node;

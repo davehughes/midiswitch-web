@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
-import { configureStore } from 'app/store';
+import { configureStore } from '@app/store';
 import { Router } from 'react-router';
-import { App } from './app';
+import { App } from '@app/index';
 
 // prepare store
 const history = createBrowserHistory();

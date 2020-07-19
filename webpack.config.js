@@ -11,6 +11,7 @@ var outPath = path.join(__dirname, './build');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var { CleanWebpackPlugin } = require('clean-webpack-plugin');
+var TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
   context: sourcePath,
@@ -24,13 +25,11 @@ module.exports = {
   },
   target: 'web',
   resolve: {
+    plugins: [new TsconfigPathsPlugin()],
     extensions: ['.js', '.ts', '.tsx'],
     // Fix webpack's default behavior to not load packages with jsnext:main module
     // (jsnext:main directs not usually distributable es6 format, but es6 sources)
     mainFields: ['module', 'browser', 'main'],
-    alias: {
-      app: path.resolve(__dirname, 'src/app/')
-    }
   },
   module: {
     rules: [

@@ -1,18 +1,25 @@
-import dynamic from 'next/dynamic';
+import React from 'react';
 import { 
-  Grid, FormControl, InputLabel, Select, MenuItem, Button, Card, CardActions, CardContent, TextField,
+  Grid, FormControl, InputLabel, Select, MenuItem, Button,
   AppBar, Toolbar, IconButton, Typography,
 } from '@material-ui/core';
 import { Menu as MenuIcon } from '@material-ui/icons';
 import { NodeModelFactory, JunctionBlockFactory, FilterBlockFactory, ChannelBreakoutBlockFactory, InterchangeBlockFactory } from './blocks';
 import { KeySplit, TransposeConfig, ChannelMapConfig, ControlMapConfig, EventMonitor } from './config';
 import FilterStack from './FilterStack';
-import { SocketClient } from '../sockets';
+import DiagramCanvas from '@components/DiagramCanvas';
+import { SocketClient } from '@components/sockets';
+import { NodeModel } from '@components/NodeModel';
 
-const DiagramCanvas = dynamic(() => import('./DiagramCanvas'), { ssr: false });
+export namespace DiagramApp {
+  export interface Props {}
+  export interface State {
+    engine: any;
+    addBlockFactory: NodeModelFactory | null;
+  }
+}
 
-
-export default class DiagramApp extends React.Component {
+export class DiagramApp extends React.Component<DiagramApp.Props, DiagramApp.State> {
   componentWillMount() {
     this.setState({
       addBlockFactory: null,
@@ -26,8 +33,8 @@ export default class DiagramApp extends React.Component {
     new InterchangeBlockFactory(),
   ];
 
-  blockFactorySelectionChanged = (e) => {
-    this.state.addBlockFactory = this.blockFactories[e.target.value];
+  blockFactorySelectionChanged = (e: React.ChangeEvent<{ value: number }>) => {
+    this.setState({ addBlockFactory: this.blockFactories[e.target.value] });
   }
 
   get model() {
@@ -47,8 +54,6 @@ export default class DiagramApp extends React.Component {
 
   doAction = () => {
     console.log('TODO: Do custom debug stuff here');
-    // console.log("Current model:", this.model);
-    // console.log('Selected nodes:', this.selectedNodes);
   }
 
 

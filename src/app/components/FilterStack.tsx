@@ -2,24 +2,25 @@ import React from 'react';
 
 import _ from 'lodash';
 
-import {
-  Grid, FormControl, InputLabel, Select, MenuItem, Button, Card, CardActions, CardContent, TextField,
-  List, ListItem, ListItemText, ListItemIcon,
-} from '@material-ui/core';
-import { NodeModelFactory, JunctionBlockFactory, FilterBlockFactory, ChannelBreakoutBlockFactory, InterchangeBlockFactory } from './blocks';
-import { KeySplit, TransposeConfig, ChannelMapConfig, ControlMapConfig, EventMonitor } from './config';
+import { Grid, Button, List, ListItem, ListItemText } from '@material-ui/core';
+import { TransposeConfig, ChannelMapConfig } from '@components/config';
 
-export default class FilterStack extends React.Component {
+export namespace FilterStack {
+  export interface Props {
+  }
+  export interface State {
+    filters: any[];
+    selectedFilter: any;
+  }
+}
+
+export default class FilterStack extends React.Component<FilterStack.Props, FilterStack.State> {
+  state: FilterStack.State;
+
   componentWillMount() {
     const filters = [
-      new ChannelMapConfig(),
-      new TransposeConfig(),
-      // {
-      //   label: 'Channel Map',
-      // },
-      // {
-      //   label: 'Transpose',
-      // },
+      new ChannelMapConfig({}),
+      new TransposeConfig({}),
     ];
     this.setState({
       filters: filters,
@@ -37,7 +38,7 @@ export default class FilterStack extends React.Component {
     return (
       <Grid container spacing={3}>
         <Grid item xs={4}>
-          <div class="list-container" style={{ padding: '1em' }}>
+          <div className="list-container" style={{ padding: '1em' }}>
             <List component="nav" aria-label="filter items" style={{ border: '1px solid lightgray' }}>
               {filters.map((filter) => (
                <ListItem button

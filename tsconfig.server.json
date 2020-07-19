@@ -1,31 +1,23 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "target": "es6",
+    "target": "es5",
     "jsx": "react",
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "module": "esnext",
+    "module": "commonjs",
     "isolatedModules": false,
     "experimentalDecorators": true,
     "declaration": false,
     "removeComments": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "strict": false,
+    "strict": true,
     "outDir": "build",
     "lib": ["es6", "es7", "dom"],
     "baseUrl": "src",
     "paths": {
-      "@app/*": ["app/*"],
-      "@actions/*": ["app/actions/*"],
-      "@components/*": ["app/components/*"],
-      "@containers/*": ["app/containers/*"],
-      "@middleware/*": ["app/middleware/*"],
-      "@models/*": ["app/models/*"],
-      "@reducers/*": ["app/reducers/*"],
-      "@store/*": ["app/store/*"],
-      "@utils/*": ["app/utils/*"]
+      "app/*": ["./app/*"]
     },
     "allowSyntheticDefaultImports": true
   },

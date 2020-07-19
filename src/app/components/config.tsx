@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Grid, FormControl, InputLabel, Select, MenuItem, Button, Card, CardActions, CardContent, TextField } from '@material-ui/core';
+import { FormControl, InputLabel, Select, MenuItem, Button, Card, CardContent, TextField } from '@material-ui/core';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 
 export class ChannelMapConfig extends React.Component {
@@ -117,9 +117,6 @@ function defineKeys() {
   // C-2 -> 0
   // C-1 -> 12
   // C0 -> 24
-  const LowLimit = 0;
-  const HighLimit = 127;
-
   const steps = [
     'C',
     'D♭',
