@@ -17,11 +17,11 @@ const FILTER_FUNCTIONS: Record<TodoModel.Filter, (todo: TodoModel) => boolean> =
   [TodoModel.Filter.SHOW_COMPLETED]: (todo) => todo.completed
 };
 
-export namespace App {
+export namespace TodoApp {
   export interface Props extends RouteComponentProps<void> {}
 }
 
-export const App = ({ history, location }: App.Props) => {
+export const TodoApp = ({ history, location }: TodoApp.Props) => {
   const dispatch = useDispatch();
   const todoActions = useTodoActions(dispatch);
   const { todos, filter } = useSelector((state: RootState) => {
