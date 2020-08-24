@@ -4,20 +4,17 @@ import { NodeModel } from '@components/NodeModel';
 export interface NodeModelFactory {
   key: string;
   label: string;
-  makeNode(any): NodeModel;
+  makeNode(): NodeModel;
 }
-
 
 export class JunctionBlockFactory {
   key = 'junction';
   label = 'Junction';
-  makeNode(canvas): NodeModel {
+  makeNode(): NodeModel {
     const node = new NodeModel({
       name: 'Junction',
       color: 'rgb(0,192,255)',
     });
-    const coords = canvas.bumpLayoutCoords();
-    node.setPosition(coords.x, coords.y);
     node.addInPort('in');
     node.addOutPort('out');
     return node;
@@ -27,13 +24,11 @@ export class JunctionBlockFactory {
 export class FilterBlockFactory {
   key = 'filter';
   label = 'Filter';
-  makeNode(canvas): NodeModel {
+  makeNode(): NodeModel {
     const node = new NodeModel({
       name: 'Filter Block',
       color: 'rgb(0,192,255)',
     });
-    const coords = canvas.bumpLayoutCoords();
-    node.setPosition(coords.x, coords.y);
     node.addInPort('in');
     node.addOutPort('out');
     return node;
@@ -43,13 +38,11 @@ export class FilterBlockFactory {
 export class ChannelBreakoutBlockFactory {
   key = 'channel-breakout';
   label = 'Channel Breakout';
-  makeNode(canvas): NodeModel {
+  makeNode(): NodeModel {
     const node = new NodeModel({
       name: 'Channel Breakout',
       color: 'rgb(0,192,255)',
     });
-    const coords = canvas.bumpLayoutCoords();
-    node.setPosition(coords.x, coords.y);
     node.addInPort('in');
     _.each(_.range(16), (i) => {
       node.addOutPort(`channel ${i + 1}`);
@@ -61,13 +54,11 @@ export class ChannelBreakoutBlockFactory {
 export class InterchangeBlockFactory {
   key = 'interchange';
   label = 'Interchange';
-  makeNode(canvas): NodeModel {
+  makeNode(): NodeModel {
     const node = new NodeModel({
       name: 'Interchange',
       color: 'rgb(0,192,255)',
     });
-    const coords = canvas.bumpLayoutCoords();
-    node.setPosition(coords.x, coords.y);
     node.addInPort('A');
     node.addInPort('B');
     node.addInPort('C');
@@ -77,3 +68,10 @@ export class InterchangeBlockFactory {
     return node;
   }
 }
+
+export const BLOCK_FACTORIES: NodeModelFactory[] = [
+  new JunctionBlockFactory(),
+  new FilterBlockFactory(),
+  new ChannelBreakoutBlockFactory(),
+  new InterchangeBlockFactory(),
+];

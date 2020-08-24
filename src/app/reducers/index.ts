@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
-import { RootState } from './state';
 import { todoReducer } from './todos';
+import { diagramReducer } from './diagram';
 
-export { RootState };
-
-export const rootReducer = combineReducers<RootState>({
-  todos: todoReducer
+export const rootReducer = combineReducers({
+  todos: todoReducer,
+  diagram: diagramReducer,
 });
+
+export type RootState = ReturnType<typeof rootReducer>;

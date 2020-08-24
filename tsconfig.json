@@ -17,14 +17,23 @@
     "lib": ["es6", "es7", "dom"],
     "baseUrl": "src",
     "paths": {
+      "@app": ["app"],
       "@app/*": ["app/*"],
+      "@actions": ["app/actions"],
       "@actions/*": ["app/actions/*"],
+      "@components": ["app/components"],
       "@components/*": ["app/components/*"],
+      "@containers": ["app/containers"],
       "@containers/*": ["app/containers/*"],
+      "@middleware": ["app/middleware"],
       "@middleware/*": ["app/middleware/*"],
+      "@models": ["app/models"],
       "@models/*": ["app/models/*"],
+      "@reducers": ["app/reducers"],
       "@reducers/*": ["app/reducers/*"],
+      "@store": ["app/store"],
       "@store/*": ["app/store/*"],
+      "@utils": ["app/utils"],
       "@utils/*": ["app/utils/*"]
     },
     "allowSyntheticDefaultImports": true

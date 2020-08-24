@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { AbstractReactFactory } from '@projectstorm/react-canvas-core';
 import { DiagramEngine } from '@projectstorm/react-diagrams-core';
 import { DefaultNodeModel, DefaultLinkModel, DefaultPortLabel } from '@projectstorm/react-diagrams';
@@ -22,6 +22,7 @@ export class CustomNodeFactory extends AbstractReactFactory<NodeModel, DiagramEn
 	}
 
 	generateModel(initialConfig): NodeModel {
+    console.log('generateModel called with config:', initialConfig);
 		return new NodeModel({});
 	}
 
@@ -84,78 +85,97 @@ export interface NodeWidgetState {
   contextOptions: string[];
 }
 
-export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
-  componentWillMount() {
-    this.setState({
-      mouseX: null,
-      mouseY: null,
-      contextOptions: [],
-    });
+export function NodeWidget(props: NodeWidgetProps, state: NodeWidgetState) {
+  const [menuState, setMenuState] = React.useState(MenuState.Closed);
+  const menuActions = MenuState.Actions(setMenuState);
+
+	const generatePort = port => {
+    return <DefaultPortLabel engine={props.engine} port={port} key={port.id} />;
+  }
+  // const launchMenu = (event: React.MouseEvent<HTMLElement>) => {
+  //   event.preventDefault();
+  //   setMenuState(MenuState.AtPosition(event.clientX - 2, event.clientY - 4));
+  // };
+  // const closeMenu = () => { setMenuState(MenuState.Closed) };
+  return (
+    <S.Node
+      selected={props.node.isSelected()}
+      background={props.node.getOptions().color}
+      onContextMenu={menuActions.launch}
+    >
+      <NodeContextMenu menuState={menuState} onClose={menuActions.close} />
+      <S.Title>
+        <StopIcon style={{ color: 'gold' }}/>
+        <S.TitleName>{props.node.getOptions().name}</S.TitleName>
+      </S.Title>
+      <S.Ports>
+        <S.PortsContainer>{_.map(props.node.getInPorts(), generatePort)}</S.PortsContainer>
+        <S.PortsContainer>{_.map(props.node.getOutPorts(), generatePort)}</S.PortsContainer>
+      </S.Ports>
+    </S.Node>
+  );
+}
+
+export namespace MenuState {
+
+  export function AtPosition(x: number, y: number): MenuState.Interface {
+    return { x, y, isOpen: true, anchorPosition: { top: y, left: x } };
   }
 
-	generatePort = port => {
-		return <DefaultPortLabel engine={this.props.engine} port={port} key={port.id} />;
-	};
+  export function Closed(): MenuState.Interface {
+    return { x: null, y: null, isOpen: false, anchorPosition: { top: -999, left: -999 } };
+  }
 
-  handleContextMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    console.log('context menu click');
-    event.preventDefault();
-
-    // Dynamically set up context menu options
-    const opts = [];
-    opts.push('Always On');
-    if (Math.random() > 0.5) {
-      opts.push('Sometimes On');
+  export function Actions(setState: (state: MenuState.Interface) => any) {
+    return {
+      launch: (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        setState(MenuState.AtPosition(event.clientX - 2, event.clientY - 4));
+      },
+      close: () => setState(MenuState.Closed())
     }
-
-    this.setState({
-      mouseX: event.clientX - 2,
-      mouseY: event.clientY - 4,
-      contextOptions: opts,
-    });
   }
 
-  handleContextMenuClose = () => {
-    console.log('context menu close');
-    this.setState({
-      mouseX: null,
-      mouseY: null,
-    });
+  export interface Interface {
+    x: number | null;
+    y: number | null;
+    isOpen: boolean;
+    anchorPosition: { top: number, left: number };
+  }
+}
+
+interface NodeContextMenuProps {
+  menuState: MenuState.Interface;
+  onClose: () => any;
+}
+
+export function NodeContextMenu({ menuState, onClose }: NodeContextMenuProps) {
+  // Dynamically set up context menu options
+  const menuOptions = [];
+  menuOptions.push('Rename');
+  menuOptions.push('Edit Internals');
+  if (Math.random() > 0.5) {
+    menuOptions.push('Sometimes On');
   }
 
-	render() {
-		return (
-			<S.Node
-				selected={this.props.node.isSelected()}
-				background={this.props.node.getOptions().color}
-        onContextMenu={this.handleContextMenuClick}
+  const handleOption = () => {
+    console.log('selected option');
+    onClose();
+  };
+
+  return (
+    <Menu
+      keepMounted
+      open={ menuState.isOpen }
+      onClose={ onClose }
+      anchorReference="anchorPosition"
+      anchorPosition={ menuState.anchorPosition }
       >
-        <Menu
-          keepMounted
-          open={this.state.mouseY !== null}
-          onClose={this.handleContextMenuClose}
-          anchorReference="anchorPosition"
-          anchorPosition={
-            this.state.mouseY !== null && this.state.mouseX !== null
-              ? { top: this.state.mouseY, left: this.state.mouseX }
-              : undefined
-          }>
-          {this.state.contextOptions.map((option) => (
-            <MenuItem onClick={this.handleContextMenuClose}>{option}</MenuItem>
-           ))}
-        </Menu>
-				<S.Title>
-          {/*<Dashboard />*/}
-          <StopIcon style={{ color: 'gold' }}/>
-					<S.TitleName>{this.props.node.getOptions().name}</S.TitleName>
-				</S.Title>
-				<S.Ports>
-					<S.PortsContainer>{_.map(this.props.node.getInPorts(), this.generatePort)}</S.PortsContainer>
-					<S.PortsContainer>{_.map(this.props.node.getOutPorts(), this.generatePort)}</S.PortsContainer>
-				</S.Ports>
-			</S.Node>
-		);
-	}
+      {menuOptions.map((option) => (
+        <MenuItem onClick={handleOption}>{option}</MenuItem>
+       ))}
+    </Menu>
+  );
 }
 
 export class LinkModel extends DefaultLinkModel {

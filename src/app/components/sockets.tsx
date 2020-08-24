@@ -1,18 +1,12 @@
-import React from 'react';
 import io, { Client } from 'socket.io-client';
 import { WorkspaceEvent } from '@models/index';
 
-export class SocketClient extends React.Component {
+export class SocketClient {
   socket: any;
 
-  async componentDidMount() {
+  constructor() {
     this.socket = io();
-    console.log('Running socket setup');
     this.socketSetup(this.socket);
-  }
-
-  async componentWillUnmount() {
-    this.socket.emit('disconnect');
   }
 
   socketSetup(socket: Client) {
@@ -29,7 +23,7 @@ export class SocketClient extends React.Component {
     });
   }
 
-  render() {
-    return (<span></span>);
+  disconnect() {
+    this.socket.emit('disconnect');
   }
 }

@@ -1,114 +1,144 @@
 import React from 'react';
 
 import { FormControl, InputLabel, Select, MenuItem, Button, Card, CardContent, TextField } from '@material-ui/core';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 
-export class ChannelMapConfig extends React.Component {
-  label = 'Channel Map';
+export interface Editor {
+  editorComponent(): JSX.Element;
+}
 
-  handleChange(e) {
+export interface ChannelMapProps {
+  type: 'channel-map-config';
+  label: string;
+}
+
+export const ChannelMapDefaultProps: (ChannelMapProps & Editor) = {
+  type: 'channel-map-config',
+  label: 'Channel Map',
+  editorComponent: () => <ChannelMapConfig {...this as any} />,
+};
+
+export function ChannelMapConfig(props: ChannelMapProps): JSX.Element {
+  const { label } = props;
+  const channel = 1;
+  const handleChange = (e) => {
     console.log('TODO: handle ChannelMapConfig channel change', e);
-  }
+  };
 
-  render() {
-    const channel = 1;
-    return (
-      <Card variant="outlined">
-        <CardContent>
-          <h2>{this.label}</h2>
-          <FormControl variant="outlined">
-            <InputLabel id="demo-simple-select-outlined-label">Channel</InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
-              value={channel}
-              onChange={this.handleChange}
-              label="Channel"
-            >
-              <MenuItem key="none" value="">
-                <em>None</em>
-              </MenuItem>
-              { Array.from(Array(16).keys()).map(idx => <MenuItem key={idx + 1} value={idx + 1}>{idx + 1}</MenuItem>) }
-            </Select>
-          </FormControl>
-        </CardContent>
-      </Card>
-    );
-  }
+  return (
+    <Card variant="outlined">
+      <CardContent>
+        <h2>{label}</h2>
+        <FormControl variant="outlined">
+          <InputLabel id="demo-simple-select-outlined-label">Channel</InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            value={channel}
+            onChange={handleChange}
+            label="Channel"
+          >
+            <MenuItem key="none" value="">
+              <em>None</em>
+            </MenuItem>
+            { Array.from(Array(16).keys()).map(idx => <MenuItem key={idx + 1} value={idx + 1}>{idx + 1}</MenuItem>) }
+          </Select>
+        </FormControl>
+      </CardContent>
+    </Card>
+  );
 }
 
-export class TransposeConfig extends React.Component {
-  label = 'Transpose';
+export interface TransposeProps {
+  type: 'transpose';
+  label: string;
+}
 
-  handleOffsetChange(e) {
+export const TransposeDefaultProps: (TransposeProps & Editor) = {
+  type: 'transpose',
+  label: 'Transpose',
+  editorComponent: () => <TransposeEditor {...this as any} />,
+}
+
+export function TransposeEditor(props: TransposeProps): JSX.Element {
+  const { label } = props;
+  const offset = 12;
+  const units = 'semitones';
+
+  const handleOffsetChange = (e) => {
     console.log('TODO: handle TransposeConfig offset change', e);
-  }
+  };
 
-  handleUnitChange(e) {
+  const handleUnitChange = (e) => {
     console.log('TODO: handle TransposeConfig unit change', e);
-  }
+  };
 
-  render() {
-    const offset = 12;
-    const units = 'semitones';
-    return (
-      <Card variant="outlined">
-        <CardContent>
-          <h2>{this.label}</h2>
-          <FormControl variant="outlined">
-            <TextField
-              id="outlined-basic"
-              type="number"
-              label="Offset"
-              variant="outlined"
-              value={offset}
-              onChange={this.handleOffsetChange}
-              />
-          </FormControl>
+  return (
+    <Card variant="outlined">
+      <CardContent>
+        <h2>{label}</h2>
+        <FormControl variant="outlined">
+          <TextField
+            id="outlined-basic"
+            type="number"
+            label="Offset"
+            variant="outlined"
+            value={offset}
+            onChange={handleOffsetChange}
+            />
+        </FormControl>
 
-          <FormControl variant="outlined">
-            <InputLabel id="demo-simple-select-outlined-label">Unit</InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
-              value={units}
-              onChange={this.handleUnitChange}
-              label="Unit"
-            >
-              <MenuItem value="semitones">Semitones</MenuItem>
-              <MenuItem value="octaves">Octaves</MenuItem>
-            </Select>
-          </FormControl>
-        </CardContent>
-      </Card>
-    );
-  }
+        <FormControl variant="outlined">
+          <InputLabel id="demo-simple-select-outlined-label">Unit</InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            value={units}
+            onChange={handleUnitChange}
+            label="Unit"
+          >
+            <MenuItem value="semitones">Semitones</MenuItem>
+            <MenuItem value="octaves">Octaves</MenuItem>
+          </Select>
+        </FormControl>
+      </CardContent>
+    </Card>
+  );
 }
 
-export class ControlMapConfig extends React.Component {
-  label = 'Control Map'
-  render() {
-    const inputControl = 1;
-    const outputControl = 64;
-    return (
-      <Card variant="outlined">
-        <CardContent>
-          <h2>{this.label}</h2>
-          <FormControl variant="outlined">
-            <TextField id="outlined-basic" label="Input CC (0-127)" variant="outlined"
-                value={inputControl}
-              />
-          </FormControl>
-          <FormControl variant="outlined">
-            <TextField id="outlined-basic" label="Output CC (0-127)" variant="outlined"
-                value={outputControl}
-              />
-          </FormControl>
-          <Button>+</Button>
-        </CardContent>
-      </Card>
-    );
-  }
+
+export interface ControlMapProps {
+  type: 'control-map';
+  label: string;
+}
+
+export const ControlMapDefaultProps: (ControlMapProps & Editor) = {
+  type: 'control-map',
+  label: 'Control Map',
+  editorComponent: () => <ControlMapEditor {...this as any} />,
+}
+
+export function ControlMapEditor(props: ControlMapProps): JSX.Element {
+  const { label } = props;
+  const inputControl = 1;
+  const outputControl = 64;
+  return (
+    <Card variant="outlined">
+      <CardContent>
+        <h2>{label}</h2>
+        <FormControl variant="outlined">
+          <TextField id="outlined-basic" label="Input CC (0-127)" variant="outlined"
+              value={inputControl}
+            />
+        </FormControl>
+        <FormControl variant="outlined">
+          <TextField id="outlined-basic" label="Output CC (0-127)" variant="outlined"
+              value={outputControl}
+            />
+        </FormControl>
+        <Button>+</Button>
+      </CardContent>
+    </Card>
+  );
 }
 
 
@@ -143,88 +173,90 @@ function defineKeys() {
   return keys;
 }
 
-export class KeySplit extends React.Component {
-  label = 'Key Split';
-
-  render() {
-    const defaultName = 'port1';
-    const keys = defineKeys();
-    return (
-      <Card variant="outlined">
-        <CardContent>
-          <h2>{this.label}</h2>
-          <FormControl variant="outlined">
-            <Select label="Range Start">
-              <MenuItem value="">
-                <em>Choose Range Start</em>
-              </MenuItem>
-              <MenuItem>Low Limit</MenuItem>
-              {keys.map((key) => (
-                <MenuItem key={key.idx}>{key.label}</MenuItem>
-               ))}
-              <MenuItem>High Limit</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl variant="outlined">
-            <Select label="Range End">
-              <MenuItem value="">
-                <em>Choose Range Start</em>
-              </MenuItem>
-              <MenuItem>Low Limit</MenuItem>
-              {keys.map((key) => (
-                <MenuItem key={key.idx}>{key.label}</MenuItem>
-               ))}
-              <MenuItem>High Limit</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl variant="outlined">
-            <TextField id="outlined-basic" label="Name" variant="outlined" 
-                value={defaultName}
-              />
-          </FormControl>
-          <Button>+</Button>
-        </CardContent>
-      </Card>
-    );
-  }
+export interface KeySplitProps {
+  type: 'key-split';
+  label: string;
+  splits: KeySplitItems[];
 }
 
-export class EventMonitor extends React.Component {
-  render() {
-    const rows = [
-      { id: 1, channel: 1, event_type: 'Control Change', input_port: 'mpk49', data1: 1, data2: 127 },
-      { id: 2, channel: 1, event_type: 'Program Change', input_port: 'dmc8', data1: 1, data2: 127 },
-      { id: 3, channel: 1, event_type: 'Note On', input_port: 'mpk49', data1: 1, data2: 127 },
-    ];
-    return (
-      <TableContainer>
-        <Table aria-label="customized table" size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Channel</TableCell>
-              <TableCell>Event Type</TableCell>
-              <TableCell>Input Port</TableCell>
-              <TableCell>Data1</TableCell>
-              <TableCell>Data2</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map(row => (
-              <TableRow key={row.id}>
-                <TableCell component="th" scope="row">{row.channel}</TableCell>
-                <TableCell>{row.event_type}</TableCell>
-                <TableCell>{row.input_port}</TableCell>
-                <TableCell>{row.data1}</TableCell>
-                <TableCell>{row.data2}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    );
-  }
+interface KeySplitItems {
+  label: string;
+  lowKey: string;
+  highKey: string;
 }
 
+export const KeySplitDefaultProps: (KeySplitProps & Editor) = {
+  type: 'key-split',
+  label: 'Key Split',
+  splits: [],
+  editorComponent: () => <KeySplitEditor {...this as any} />,
+}
 
+export function KeySplitEditor(props: KeySplitProps): JSX.Element {
+  const { label } = props;
+  const [splits, setSplits] = React.useState([{
+      lowKey: '',
+      highKey: '',
+      label: 'split1',
+  }]);
+  const keys = defineKeys();
+  const addKeySplit = (atIndex) => {
+    setSplits(splits => splits.splice(atIndex, 0, {
+      lowKey: '',
+      highKey: '',
+      label: `split${ splits.length + 1 }`,
+    }));
+  };
+  const removeKeySplit = (atIndex) => {
+    setSplits(splits => splits.splice(atIndex, 1));
+  };
+
+  // if (splits.length === 0) {
+  //   addKeySplit(0);
+  // }
+
+  return (
+    <Card variant="outlined">
+      <CardContent>
+        <h2>{label} ({ splits.length })({ keys.length })</h2>
+        {splits.map((split, idx) => (
+          <div>
+            <FormControl variant="outlined">
+              <Select label="Range Start">
+                <MenuItem value="">
+                  <em>Choose Range Start</em>
+                </MenuItem>
+                <MenuItem>Low Limit</MenuItem>
+                {keys.map((key) => (
+                  <MenuItem key={key.idx}>{key.label}</MenuItem>
+                 ))}
+                <MenuItem>High Limit</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl variant="outlined">
+              <Select label="Range End">
+                <MenuItem value="">
+                  <em>Choose Range Start</em>
+                </MenuItem>
+                <MenuItem>Low Limit</MenuItem>
+                {keys.map((key) => (
+                  <MenuItem key={key.idx}>{key.label}</MenuItem>
+                 ))}
+                <MenuItem>High Limit</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl variant="outlined">
+              <TextField id="outlined-basic" label="Name" variant="outlined" 
+                  value={split.label}
+                />
+            </FormControl>
+            <Button onClick={() => addKeySplit(idx)}>+</Button>
+            <Button onClick={() => removeKeySplit(idx)}>-</Button>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  );
+}
